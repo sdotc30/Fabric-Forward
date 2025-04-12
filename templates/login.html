@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leftover Food Donation Portal - Auth</title>
+  <link rel="stylesheet" href="{{url_for('static',filename = 'css/login-style.css')}}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-pane">
+      <div class="switcher">
+        <div class="slider">
+          <span id="slider-role">Donor</span>
+        </div>
+        <button class="active" onclick="switchRole('donor')">Donor</button>
+        <button onclick="switchRole('recipient')">Recipient</button>
+      </div>
+      <div class="auth-forms">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form id="sign-in-form" class="form active" method="post" action="/login">
+          <h2>Sign In as <span id="role-sign-in">Donor</span></h2>
+          <input type="email" name="email" placeholder="Email" required />
+          <input type="password" name="password" placeholder="Password" required />
+          <input type="hidden" name="role" id="hidden-signin-role" value="donor"> <!-- Hidden field for role -->
+          <button type="submit" class="sign-in">Sign In</button>
+        </form>
+        <span>Don't have an account?</span>
+        <a href="{{ url_for('signup') }}" style="color: #ff6f61;">Sign Up Here!</a>
+      </div>
+    </div>
+    <div class="right-pane">
+      <!-- <div class="image-placeholder">Image Here</div> -->
+    </div>
+  </div>
+  <script src="{{url_for('static',filename = 'js/login-script.js')}}"></script>
+</body>
+
+</html>

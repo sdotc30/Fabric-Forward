@@ -1,0 +1,124 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #212020;
+    color: white;
+  }
+  
+  /* Header */
+  header {
+    background-color: #ff6f61;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+  }
+
+  .profile-dashboard li{ 
+    background-color: #ff6f61;
+  }
+  
+  nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+  }
+  
+  nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+  }
+  
+  /* Container */
+  .container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+  }
+  
+  /* Sections */
+  section {
+    background: #E0E0E0;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    color: #212020;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  }
+  
+  /* User Info */
+  .user-info {
+    text-align: left;
+  }
+  
+  .user-info p {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  /* Impact Summary */
+  .impact-cards {
+    display: flex;
+    justify-content: space-between;
+    gap: 20px;
+  }
+  
+  .card {
+    background: #ff6f61;
+    color: white;
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    flex: 1;
+  }
+  
+  .card h3 {
+    margin: 0;
+    font-size: 22px;
+  }
+  
+  .card p {
+    font-size: 32px;
+    font-weight: bold;
+  }
+  
+  /* Donations List */
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  ul li {
+    background: #fff;
+    color: #212020;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+  }
+  
+  /* Button Styles */
+  button {
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: 0.3s;
+  }
+  
+  button:hover {
+    background-color: #e05247;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .impact-cards {
+      flex-direction: column;
+    }
+  }
+  

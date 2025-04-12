@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Donor Dashboard</title>
+    <link rel="stylesheet" href="{{url_for('static', filename = 'css/donor_dashboard.css')}}" />
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+
+  </head>
+  <body>
+    <header>
+      <h1>Donor Dashboard</h1>
+      <nav>
+        <ul>
+          <li><a href="{{url_for('home')}}">Home</a></li>
+          <li><a href="{{url_for('profile')}}">Profile</a></li>
+          <li><a href="{{url_for('logout')}}" id="logout">Logout</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <div class="right-column">
+        <section class="filter-section">
+          <h2 style="color: black;">Filter Requests</h2>
+          <input
+            type="text"
+            id="location-filter"
+            placeholder="Enter location"
+          />
+          <button id="apply-filter">Apply Filter</button>
+        </section>
+
+        <section class="requests-list">
+          <h2>Available Requests</h2>
+          <div class="request-cards" id="requests"></div> 
+        </section>
+      </div>
+    </div>
+
+    <script src="{{url_for('static', filename = 'js/donor_dashboard.js')}}"></script>
+  </body>
+</html>

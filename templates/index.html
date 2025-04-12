@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Be The Reason Someone Smiles Today</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/style.css') }}"
+    />
+    <link
+      rel="icon"
+      href="{{ url_for('static', filename='images/favicon.ico') }}"
+      type="image/x-icon"
+    />
+
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <section id="home" class="hero">
+      <header>
+        <div class="Sign-in">
+          <a href="{{url_for('login')}}" class="btn">Sign In</a>
+        </div>
+      </header>
+      <div class="hero-content">
+        <h1>Be The Reason Someone Smiles Today!</h1>
+        <p class="para">
+          Donating leftover clothes is a simple yet impactful way to help those
+          in need. Our platform connects generous donors with local
+          organizations and individuals who can make use of gently used
+          clothing. By donating, you’re not only reducing textile waste but also
+          making a meaningful difference in someone’s life. Whether you have
+          extra clothes you no longer need, or gently worn items that could
+          benefit others, we’re here to facilitate the donation process,
+          ensuring it reaches those who will benefit. Together, we can create a
+          community of kindness and care, one piece of clothing at a time.
+        </p>
+        <a href="{{url_for('login')}}" class="btndonate">Donate Now</a>
+      </div>
+      <div class="arrow-down">
+        <i class="fas fa-chevron-down"></i>
+      </div>
+    </section>
+
+    <section id="why-choose-us" class="why-choose-us">
+      <h2>Why Choose Us?</h2>
+      <div class="features">
+        <div class="feature">
+          <h3>Earn Badges</h3>
+
+          <img src="static/images/badges.jpg" class="imgbadge" />
+
+          <p>
+            By donating clothes, you will earn collectible badges that can be
+            shared on social media platforms, encouraging others to contribute
+            and make a difference.
+          </p>
+        </div>
+        <div class="feature">
+          <h3>Help Us Make a Change</h3>
+
+          <img src="static/images/Change.jpg" class="imgchange" />
+
+          <p>
+            Join us in making a difference—donate clothes and support our
+            mission to reduce waste, provide clothing to those in need, and
+            create a positive impact in the community.
+          </p>
+        </div>
+        <div class="feature">
+          <h3>Incentives</h3>
+
+          <img src="static/images/Incentives.jpg" class="imgincentives" />
+
+          <p>
+            Support our mission by donating clothes and receive exciting
+            incentives, including coupon codes and government-backed benefits,
+            as a token of appreciation for your generosity.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <section2 class="current">
+      <h2>Current Scenario</h2>
+      <div class="explanation">
+        <p>
+          On average, an Indian household discards a significant amount of
+          usable clothing each year, contributing to growing textile waste and
+          environmental strain. At the same time, countless individuals across
+          the country lack access to basic clothing, highlighting a stark
+          imbalance in resource distribution. The lack of awareness, fast
+          fashion habits, and limited donation channels further worsen the
+          problem. To tackle clothing waste, India needs stronger initiatives,
+          public awareness campaigns, and better infrastructure for collection
+          and redistribution. By embracing sustainable clothing practices and
+          donating unused garments, we can significantly reduce waste and bring
+          dignity to those in need.
+        </p>
+        <img src="static/images/food_waste.png" />
+      </div>
+    </section2>
+
+    <footer>
+      <p>&copy; 2025 Be The Reason. All rights reserved.</p>
+    </footer>
+  </body>
+</html>

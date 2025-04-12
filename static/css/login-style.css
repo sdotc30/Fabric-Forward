@@ -1,0 +1,182 @@
+/* styles.css */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #f9fafb;
+}
+
+.container {
+    display: flex;
+    height: 100vh;
+}
+
+.left-pane {
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background: #212020; /* Dark background for left pane */
+    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+    color: white; /* Default text color for left pane */
+}
+
+.switcher {
+    display: flex;
+    background: #e0e0e0;
+    border-radius: 25px;
+    overflow: hidden;
+    width: 200px;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.switcher button {
+    flex: 1;
+    border: none;
+    background: none;
+    padding: 10px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s;
+    color: #555;
+    text-align: center;
+}
+
+.switcher .slider {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%;
+    height: 100%;
+    background: #ff6f61;
+    border-radius: 25px;
+    transition: transform 0.3s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.switcher .slider span {
+    color: white;
+    font-weight: bold;
+}
+
+.switcher button.active {
+    color: white;
+}
+
+.auth-forms {
+    width: 80%;
+    max-width: 400px;
+}
+
+.form {
+    display: none;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.form.active {
+    display: flex;
+}
+
+.form h2 {
+    text-align: center;
+    color: white; /* White text for form headers */
+    margin-bottom: 20px;
+}
+
+.form input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: border-color 0.3s;
+    color: white; /* White text for input fields */
+    background: #333; /* Dark background for input fields */
+}
+
+.form input::placeholder {
+    color: rgba(255, 255, 255, 0.7); /* Light gray placeholder text */
+}
+
+.form input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.sign-in,
+.sign-up {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+    transition: background 0.3s;
+    color: white; /* White text for buttons */
+}
+
+.sign-in {
+    margin-top: 50px;
+    background: #ff6f61;
+    margin-bottom: 10px;
+    border-radius: 50px;
+}
+
+.sign-up {
+    background: #ff6f61;
+    margin-bottom: 20px;
+    border-radius: 50px;
+}
+
+.right-pane {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: #f0f0f0;
+    background-image: url("/static/images/login-img.avif");
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.image-placeholder {
+    width: 75%;
+    height: 75%;
+    background: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+}
+
+.flash {
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .flash.primary {
+    background-color: #cce5ff;
+    color: #004085;
+  }
+  
+  .flash.danger {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .flash.warning {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  

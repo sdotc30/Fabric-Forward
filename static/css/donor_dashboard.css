@@ -1,0 +1,188 @@
+/* General Styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #212020;
+    color: white;
+}
+
+/* Header */
+header {
+    background-color: #FF6F61;
+    color: white;
+    padding: 15px;
+    text-align: center;
+    width: 100%;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+}
+
+nav ul li {
+    display: inline;
+}
+
+nav ul li a {
+    color: white;
+    text-decoration: none;
+    font-size: 18px;
+}
+
+/* Dashboard Layout */
+.container {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+}
+
+/* Right Column (Requests & Filters) */
+.right-column {
+    background: #2E2E2E;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-radius: 5px;
+    width: 60%;
+}
+
+/* Filter Section */
+.filter-section {
+    background: #ecf0f1;
+    padding: 15px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.filter-section input {
+    flex: 1;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    color: black;
+}
+
+.filter-section button {
+    padding: 8px 12px;
+    background-color: #FF6F61;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.filter-section button:hover {
+    background-color: #000;
+}
+
+/* Requests List */
+.requests-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.requests-list li {
+    background: #fff;
+    padding: 10px;
+    margin-bottom: 10px;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    color: black;
+    position: relative;
+}
+
+button {
+    background-color: #FF6F61;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-top: 10px;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #fff;
+}
+
+
+.request-cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2rem;
+    margin-top: 2rem;
+    padding: 0 2rem;
+  }
+  
+  .request-card {
+    background-color: #fefefe;
+    color: black;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  .request-card:hover {
+    transform: scale(1.02);
+  }
+  
+  .request-card h3 {
+    margin-top: 0;
+  }
+  
+  .request-card p {
+    margin: 0.5rem 0;
+  }
+  
+  .request-card .accept-btn {
+    display: inline-block;
+    background-color: #ff6b5c;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.2rem;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 1rem;
+    text-decoration: none;
+  }
+  
+  .request-card .accept-btn:hover {
+    background-color: #e0594c;
+  }
+  
+  .request-card h3 {
+    margin-top: 0;
+    font-size: 1.2rem;
+    color: #2c3e50;
+  }
+  
+
+  .map-container {
+    margin: 1rem 0;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+  }
+  
+  .map-link {
+    display: inline-block;
+    margin-top: 0.5rem;
+    color: #FF6F61;
+    text-decoration: underline;
+    font-weight: bold;
+  }
+  .map-link:hover {
+    color: #e0594c;
+  }
+  

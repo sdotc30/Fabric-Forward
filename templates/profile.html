@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Profile Page</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/profile.css')}}" />
+    <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+  </head>
+  <body>
+    <header>
+      <h1>User Profile</h1>
+      <nav>
+        <ul class="profile-dashboard">
+          <li><a href="{{url_for('donor_dashboard')}}">Dashboard</a></li>
+          <li><a href="{{url_for('logout')}}" id="logout">Logout</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <!-- ✅ User Info Section -->
+      <section class="user-info">
+        <h2>👤 User Information</h2>
+        <div id="user-details">
+          <p><strong>Name:</strong> <span id="user-name">Loading...</span></p>
+          <p><strong>Email:</strong> <span id="user-email">Loading...</span></p>
+          <p><strong>Role:</strong> <span id="user-role">Loading...</span></p>
+        </div>
+      </section>
+
+      <!-- ✅ Impact Summary -->
+      <section class="impact-summary">
+        <h2>🌟 Your Impact</h2>
+        <div class="impact-cards">
+          <div class="card">
+            <h3>📦Active Donations</h3>
+            <p id="donations-count">0</p>
+          </div>
+          <div class="card">
+            <h3>✅ Donations Fulfilled</h3>
+            <p id="requests-fulfilled">0</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- ✅ Ongoing Donations -->
+      <section class="ongoing-donations">
+        <h2>🔥 Ongoing Donations</h2>
+        <ul id="ongoing-list">
+          <li>No ongoing donations.</li>
+        </ul>
+      </section>
+
+      <!-- ✅ Donation History -->
+      <section class="donation-history">
+        <h2>📜 Donation History</h2>
+        <ul id="history-list">
+          <li>No past donations.</li>
+        </ul>
+      </section>
+    </div>
+
+    <script src="{{url_for('static', filename='js/profile.js')}}"></script>
+  </body>
+</html>

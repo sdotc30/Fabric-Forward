@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leftover Food Donation Portal - Auth</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/login-style.css') }}">
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon">
+
+
+</head>
+
+<body>
+  <div class="container">
+    <div class="left-pane">
+      <!-- Role Switcher -->
+      <div class="switcher">
+        <div class="slider">
+          <span id="slider-role">Donor</span>
+        </div>
+        <button class="active" onclick="switchRole('donor')">Donor</button>
+        <button onclick="switchRole('recipient')">Recipient</button>
+      </div>
+
+      <!-- Sign Up Form -->
+      <div class="auth-forms">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+        {% for category, message in messages %}
+        <div class="flash {{ category }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% endwith %}
+
+        <form id="sign-up-form" class="form active" method="post" action="/signup">
+          <h2>Sign Up as <span id="role-sign-in">Donor</span></h2> <!-- This ID is needed by JS -->
+          <input type="email" name="email" placeholder="Email" required />
+          <input type="password" name="password" placeholder="Password" required />
+          <input type="hidden" name="role" id="hidden-signin-role" value="donor"> <!-- ID updated to match JS -->
+          <button type="submit" class="sign-in">Sign Up</button>
+        </form>
+
+        <span>Already have an account?</span>
+        <a href="{{ url_for('login') }}" style="color: #ff6f61;">Sign In Here!</a>
+      </div>
+    </div>
+
+    <div class="right-pane">
+      <!-- Optional Image / Illustration -->
+    </div>
+  </div>
+
+  <!-- Link to JS -->
+  <script src="{{ url_for('static', filename='js/login-script.js') }}"></script>
+</body>
+
+</html>
