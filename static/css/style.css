@@ -14,7 +14,6 @@ header {
     -webkit-backdrop-filter: transparent;
     color: #fff;
     padding-top: 10px;
-    padding-right: 20px;
     top: 0;
     z-index: 1000;
 }
@@ -50,6 +49,7 @@ nav ul li a.join-now {
     background-image: url("/static/images/mainbg.jpg"); /* Add your background image */
     background-size: cover;
     color:white;
+    max-width: 100vw;
     height: 100vh;
 }
 
@@ -68,7 +68,7 @@ nav ul li a.join-now {
     flex-direction: column;
     flex-wrap: wrap;
     width: 700px;
-    
+    box-sizing: border-box; 
 }
 
 .para {
@@ -91,10 +91,12 @@ nav ul li a.join-now {
     text-decoration: none;
     border-radius: 5px;
     font-weight: bold;
-    width: 150px;
-    height: 50px;
+    width: 180px;
+    height: 60px;
     font-size:20px;
     border-radius: 50px;
+    margin-right: 20px;
+    box-sizing: border-box;
 }
 
 .btndonate{
@@ -285,6 +287,7 @@ footer {
 /* Responsive Styles */
 
 @media (max-width: 1024px) {
+    
     .hero-content {
         padding-left: 50px;
         width: 90%;
@@ -293,6 +296,7 @@ footer {
     .para {
         width: 90%;
     }
+
 
     .btndonate {
         width: 200px;
@@ -315,6 +319,7 @@ footer {
 }
 
 @media (max-width: 768px) {
+    
     nav ul {
         flex-direction: column;
         align-items: center;
@@ -361,7 +366,7 @@ footer {
 
 @media (max-width: 480px) {
     header {
-        justify-content: center;
+        justify-content: end;
         padding-right: 0;
     }
 
@@ -379,7 +384,7 @@ footer {
         font-size: 0.95rem;
         width: 100%;
     }
-
+    .btn,
     .btndonate {
         width: 160px;
         height: 45px;
