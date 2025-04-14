@@ -280,3 +280,139 @@ footer {
     width: 450px;
     height: 400px;
 }
+
+
+/* Responsive Styles */
+
+@media (max-width: 1024px) {
+    .hero-content {
+        padding-left: 50px;
+        width: 90%;
+    }
+
+    .para {
+        width: 90%;
+    }
+
+    .btndonate {
+        width: 200px;
+        height: 60px;
+        font-size: 24px;
+    }
+
+    .explanation {
+        flex-direction: column;
+        padding: 0 20px;
+    }
+
+    .explanation p{
+        font-size: 1rem;
+    }
+
+    .current p {
+        margin: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    nav ul {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    nav ul li {
+        margin: 10px 0;
+    }
+
+    .hero h1 {
+        font-size: 50px;
+    }
+
+    .para {
+        font-size: 1rem;
+    }
+
+    .btndonate {
+        width: 180px;
+        height: 50px;
+        font-size: 20px;
+    }
+
+    .features {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .feature {
+        max-width: 90%;
+    }
+
+    .imgbadge, .imgincentives, .imgchange {
+        width: 80%;
+        height: auto;
+    }
+
+    .current img {
+        width: 90%;
+        height: auto;
+        align-self: center;
+    }
+}
+
+@media (max-width: 480px) {
+    header {
+        justify-content: center;
+        padding-right: 0;
+    }
+
+    .hero-content {
+        padding: 20px;
+        width: 100%;
+    }
+
+    .hero h1 {
+        font-size: 36px;
+        line-height: 1.1;
+    }
+
+    .para {
+        font-size: 0.95rem;
+        width: 100%;
+    }
+
+    .btndonate {
+        width: 160px;
+        height: 45px;
+        font-size: 18px;
+    }
+
+    .arrow-down i {
+        font-size: 1.5em;
+    }
+
+    .current h2 {
+        font-size: 1.8em;
+    }
+
+    .current p {
+        font-size: 1rem;
+        margin: 10px;
+    }
+}
+
+.feature-img {
+    width: 100%;
+    max-width: 160px;
+    height: 120px;
+    object-fit: contain;
+    display: block;
+    margin: 0 auto 20px auto;
+  }
+  
+  @media (max-width: 600px) {
+    .feature-img {
+      max-width: 120px;
+      height: auto;
+    }
+  }
+  

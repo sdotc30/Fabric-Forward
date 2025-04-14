@@ -1,4 +1,4 @@
-/* styles.css */
+/* General Styles */
 * {
     margin: 0;
     padding: 0;
@@ -12,18 +12,19 @@ body {
 
 .container {
     display: flex;
-    height: 100vh;
+    height: 100vh; /* Full viewport height */
 }
 
 .left-pane {
-    width: 50%;
+    width: 50%; /* Half of the container on large screens */
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     background: #212020; /* Dark background for left pane */
-    box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
     color: white; /* Default text color for left pane */
+    padding: 20px; /* Add padding for smaller screens */
+    text-align: center;
 }
 
 .switcher {
@@ -56,10 +57,11 @@ body {
     height: 100%;
     background: #ff6f61;
     border-radius: 25px;
-    transition: transform 0.3s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
+    transition: transform 0.3s ease-in-out; /* Smooth sliding animation */
+    transform: translateX(0); /* Initial position */
 }
 
 .switcher .slider span {
@@ -90,6 +92,7 @@ body {
     text-align: center;
     color: white; /* White text for form headers */
     margin-bottom: 20px;
+    font-size: 24px; /* Slightly smaller font size */
 }
 
 .form input {
@@ -100,6 +103,7 @@ body {
     transition: border-color 0.3s;
     color: white; /* White text for input fields */
     background: #333; /* Dark background for input fields */
+    width: 100%; /* Full width inputs */
 }
 
 .form input::placeholder {
@@ -113,7 +117,7 @@ body {
 
 .sign-in,
 .sign-up {
-    width: 100%;
+    width: 100%; /* Full width buttons */
     padding: 12px;
     border: none;
     cursor: pointer;
@@ -124,7 +128,7 @@ body {
 }
 
 .sign-in {
-    margin-top: 50px;
+    margin-top: 30px; /* Reduced margin for smaller screens */
     background: #ff6f61;
     margin-bottom: 10px;
     border-radius: 50px;
@@ -137,46 +141,158 @@ body {
 }
 
 .right-pane {
-    width: 50%;
+    width: 50%; /* Half of the container on large screens */
     display: flex;
     justify-content: center;
     align-items: center;
     background: #f0f0f0;
-    background-image: url("/static/images/login-img.avif");
+    background-image: url("/static/images/login-img.png");
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center; /* Center the image */
 }
 
-.image-placeholder {
-    width: 75%;
-    height: 75%;
-    background: #ccc;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: 10px;
-}
-
+/* Flash messages styling */
 .flash {
-    padding: 10px;
-    border-radius: 5px;
-    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 20px;
     font-weight: bold;
     text-align: center;
-  }
-  
-  .flash.primary {
+    font-size: 16px;
+    max-width: 400px;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    opacity: 0;
+    animation: fadeIn 0.5s forwards;
+}
+
+.flash.primary {
     background-color: #cce5ff;
     color: #004085;
-  }
-  
-  .flash.danger {
+    border: 2px solid #004085;
+}
+
+.flash.danger {
     background-color: #f8d7da;
     color: #721c24;
-  }
-  
-  .flash.warning {
+    border: 2px solid #721c24;
+}
+
+.flash.warning {
     background-color: #fff3cd;
     color: #856404;
-  }
-  
+    border: 2px solid #856404;
+}
+
+.flash.success {
+    background-color: #d4edda;
+    color: #155724;
+    border: 2px solid #155724;
+}
+
+/* Add smooth transition for color change */
+.flash.primary,
+.flash.danger,
+.flash.warning,
+.flash.success {
+    transition: all 0.3s ease-in-out;
+}
+
+/* Fade-in animation for flash messages */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+/* Optional: Animation to fade out flash message after some time */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+.flash.fade-out {
+    animation: fadeOut 1s forwards;
+    animation-delay: 3s; /* Flash will fade out after 3 seconds */
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 768px) {
+    /* Hide the right pane on smaller screens */
+    .right-pane {
+        display: none; /* Hide the image */
+    }
+
+    /* Adjust container layout */
+    .container {
+        flex-direction: column; /* Stack panes vertically */
+        align-items: center; /* Center the content */
+    }
+
+    /* Make left pane full width */
+    .left-pane {
+        width: 100%;
+        height: 100%; /* Take full height */
+        justify-content: center; /* Center content vertically */
+    }
+
+    /* Adjust switcher width */
+    .switcher {
+        width: 90%;
+    }
+
+    /* Reduce font sizes for better readability */
+    .form h2 {
+        font-size: 20px;
+    }
+
+    .form input {
+        font-size: 14px;
+    }
+
+    .sign-in,
+    .sign-up {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    /* Further adjustments for very small screens */
+    .switcher {
+        width: 100%;
+        max-width: 250px;
+    }
+
+    .form h2 {
+        font-size: 18px;
+    }
+
+    .form input {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .sign-in,
+    .sign-up {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    /* Reduce margins and padding */
+    .left-pane {
+        padding: 15px;
+    }
+
+    .auth-forms {
+        padding: 0 10px;
+    }
+}

@@ -1,89 +1,73 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Recipient Dashboard</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/recipient_dashboard.css') }}"
-    />
-    <link
-      rel="icon"
-      href="{{ url_for('static', filename='images/favicon.ico') }}"
-      type="image/x-icon"
-    />
-  </head>
 
-  <body>
-    <header>
-      <h1>Recipient Dashboard</h1>
-      <nav>
-        <ul>
-          <li><a href="{{url_for('home')}}">Home</a></li>
-          <li><a href="{{url_for('profile')}}">Profile</a></li>
-          <li><a href="{{url_for('logout')}}" id="logout">Logout</a></li>
-        </ul>
-      </nav>
-    </header>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Recipient Dashboard</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/recipient_dashboard.css') }}" />
+  <link rel="icon" href="{{ url_for('static', filename='images/favicon.ico') }}" type="image/x-icon" />
+</head>
 
-    <div class="single-column">
-      <!-- Form at the top -->
-      <section class="request-form">
-        <h2>Post a Cloth Donation Request</h2>
-        <form id="requestForm" method="post" action="/recipient_dashboard">
-          <input
-            type="text"
-            name="food_item"
-            id="foodItem"
-            placeholder="Cloth Item"
-            required
-          />
-          <input
-            type="number"
-            name="quantity"
-            id="quantity"
-            placeholder="Quantity (In numbers)"
-            required
-          />
-          <input
-            type="text"
-            name="location"
-            id="location"
-            placeholder="Location"
-            required
-          />
-          <input
-            type="datetime-local"
-            name="date-time"
-            id="expiryTime"
-            required
-          />
-          <textarea
-            id="description"
-            name="description"
-            placeholder="Description"
-          ></textarea>
-          <button type="submit">Post Request</button>
-        </form>
-      </section>
+<body>
+  <header>
+    <h1>Recipient Dashboard</h1>
+    <nav>
+      <ul>
+        <li><a href="{{url_for('home')}}">Home</a></li>
+        <li><a href="{{url_for('profile')}}">Profile</a></li>
+        <li><a href="{{url_for('logout')}}" id="logout">Logout</a></li>
+      </ul>
+    </nav>
+  </header>
 
-      <!-- Filter -->
-      <section class="filter-section">
-        <h2>Filter Requests</h2>
-        <input type="text" id="location-filter" placeholder="Enter location" />
-        <button id="apply-filter">Apply Filter</button>
-      </section>
+  <div class="single-column">
+    <!-- Form at the top -->
+    <section class="request-form">
+      <h2>Post a Cloth Donation Request</h2>
+      <form id="requestForm" method="post" action="/recipient_dashboard">
+        <input type="text" name="cloth_item" id="foodItem" placeholder="Cloth Item" required />
+        <input type="number" name="quantity" id="quantity" placeholder="Quantity (In numbers)" required />
+        <input type="text" name="location" id="location" placeholder="Location" required />
+        <select name="gender" id="gender" required>
+          <option value="" disabled selected>Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="unisex">Unisex</option>
+        </select>
+        <select name="age_group" id="age_group" required>
+          <option value="" disabled selected>Select Age Group</option>
+          <option value="0-12">0-12 years</option>
+          <option value="13-18">13-18 years</option>
+          <option value="19-25">19-25 years</option>
+          <option value="26-32">26-32 years</option>
+          <option value="33+">33 years and older</option>
+        </select>      
+        <select name="size" id="size" required>
+          <option value="" disabled selected>Select Cloth Sizing</option>
+          <option value="XS">XS</option>
+          <option value="S">S</option>
+          <option value="M">M</option>
+          <option value="L">L</option>
+          <option value="XL">XL</option>
+          <option value="XXL">XXL</option>
+        </select>      
+        <textarea id="description" name="description" placeholder="DESCRIPTION"></textarea>
+        <button type="submit">Post Request</button>
+      </form>
+    </section>
 
-      <!-- Requests List -->
-      <section class="requests-list">
-        <h2>My Requests</h2>
-        <div class="card-container" id="recipient-requests-body">
-          <!-- Cards will be inserted here by JavaScript -->
-        </div>
-      </section>
-    </div>
 
-    <script src="{{ url_for('static', filename='js/recipient.js') }}"></script>
-  </body>
+    <!-- Requests List -->
+    <section class="requests-list">
+      <h2>My Requests</h2>
+      <div class="card-container" id="recipient-requests-body">
+        <!-- Cards will be inserted here by JavaScript -->
+      </div>
+    </section>
+  </div>
+
+  <script src="{{ url_for('static', filename='js/recipient.js') }}"></script>
+</body>
+
 </html>
