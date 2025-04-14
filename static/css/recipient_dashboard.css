@@ -258,6 +258,21 @@ body {
 }
 
 @media (max-width: 600px) {
+    header{
+        box-sizing: border-box;
+    }
+    nav ul li a {
+        font-size: 14px;
+      }
+    
+    .request-form{
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .requests-list{
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
     .card-container {
       grid-template-columns: 1fr; /* 1 card per row on small screens */
     }

@@ -254,8 +254,11 @@ button:hover {
 @media screen and (max-width: 480px) {
   header {
     font-size: 16px;
+    box-sizing: border-box;
   }
-
+  nav ul{
+    margin-bottom: 5px;
+  }
   nav ul li a {
     font-size: 14px;
   }
