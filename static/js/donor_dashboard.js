@@ -84,7 +84,7 @@ function renderRequests(requests) {
         if (status === "Acknowledgement Pending" || status === "Donation Ongoing" || status === "Donation Accepted") {
           const cancelBtn = document.createElement("button");
           cancelBtn.textContent = "Cancel Donation";
-          cancelBtn.classList.add("cancel-btn");
+          cancelBtn.classList.add("accept-btn");
 
           cancelBtn.addEventListener("click", () => {
             fetch(`/api/status/delete/${requestId}`, {
