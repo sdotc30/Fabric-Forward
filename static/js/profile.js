@@ -17,12 +17,12 @@ document.addEventListener("DOMContentLoaded", () => {
   
         // ✅ Static Donations Data
         const donations = [
-          { item: "T-Shirt", date: "2025-03-25", status: "Completed" },
-          { item: "Pajamas", date: "2025-03-28", status: "Completed" }
+          { item: "T-Shirt", date: "2025-03-25", status: "Completed" }
         ];
   
         const ongoingDonations = [
-          { item: "Shirt", quantity: "5 pieces", location: "Chennai" }
+          { item: "Shirt", quantity: "5 pieces", location: "Chennai" },
+          { item: "Joggers", quantity: "10 pieces", location: "Tambaram" }
         ];
   
         // ✅ Display Impact Summary

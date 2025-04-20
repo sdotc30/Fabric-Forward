@@ -1,74 +1,125 @@
 document.addEventListener("DOMContentLoaded", () => {
-  fetch("/api/my_requests")
-    .then(response => {
-      if (!response.ok) throw new Error("Network error");
-      return response.json();
-    })
-    .then(data => {
-      const container = document.getElementById("recipient-requests-body");
-      container.innerHTML = "";
+  Promise.all([
+    fetch("/api/my_requests").then(res => res.json()),
+    fetch("/api/status").then(res => res.json())
+  ])
+  .then(([requests, statuses]) => {
+    const container = document.getElementById("recipient-requests-body");
+    container.innerHTML = "";
 
-      if (Array.isArray(data) && data.length > 0) {
-        data.forEach(item => {
-          const card = document.createElement("div");
-          card.classList.add("card");
+    // Map of rid → status
+    const statusMap = {};
+    statuses.forEach(entry => {
+      statusMap[entry.rid] = entry.status;
+    });
 
-          card.innerHTML = `
-            <h3>${item.food_item.toUpperCase()}</h3>
-            <p><strong>Quantity (in numbers):</strong> <span class="editable" data-field="quantity">${item.quantity}</span></p>
-            <p><strong>Location:</strong> <span class="editable" data-field="location">${item.location}</span></p>
-            <p><strong>Expiry:</strong> <span class="editable" data-field="expiry_time">${item.expiry_time}</span></p>
-            <p><strong>Description:</strong> <span class="editable" data-field="desc">${item.desc || "No description provided."}</span></p>
-            <button class="edit-btn">Edit</button>
-            <button class="remove-btn">Remove</button>
-          `;
+    if (Array.isArray(requests) && requests.length > 0) {
+      requests.forEach(item => {
+        const card = document.createElement("div");
+        card.classList.add("card");
 
-          // Append card to container
-          container.appendChild(card);
+        const status = statusMap[item.id] || "Donation Request Listed";
 
-          // REMOVE handler
-          card.querySelector(".remove-btn").addEventListener("click", () => {
-            fetch(`http://127.0.0.1:5000/api/delete_request/${item.id}`, {
-              method: "DELETE"
-            })
-            .then(res => {
-              if (res.ok) {
-                card.remove(); // Remove from UI
-              } else {
-                alert("Error deleting request");
-              }
-            });
+        card.innerHTML = `
+          <h3>${item.cloth_item.toUpperCase()}</h3>
+          <p><strong>Quantity (in numbers):</strong> <span class="editable" data-field="quantity">${item.quantity}</span></p>
+          <p><strong>Location:</strong> <span class="editable" data-field="location">${item.location}</span></p>
+          <p><strong>Gender:</strong> <span class="editable" data-field="gender">${item.gender}</span></p>
+          <p><strong>Age Group:</strong> <span class="editable" data-field="age_group">${item.age_group}</span></p>
+          <p><strong>Required Cloth Size:</strong> <span class="editable" data-field="size">${item.size}</span></p>
+          <p><strong>Description:</strong> <span class="editable" data-field="desc">${item.desc || "No description provided."}</span></p>
+          <p><strong>Status:</strong> <span class="donation-status">${status}</span></p>
+        `;
+
+        const editBtn = document.createElement("button");
+        editBtn.textContent = "Edit";
+        editBtn.classList.add("edit-btn");
+
+        const removeBtn = document.createElement("button");
+        removeBtn.textContent = "Remove";
+        removeBtn.classList.add("remove-btn");
+
+        card.appendChild(editBtn);
+        card.appendChild(removeBtn);
+
+        // Acknowledge button (for recipient to mark Ongoing)
+        if (status === "Acknowledgement Pending") {
+          const acknowledgeBtn = document.createElement("button");
+          acknowledgeBtn.textContent = "Acknowledge Donation";
+          acknowledgeBtn.classList.add("acknowledge-btn");
+      
+          acknowledgeBtn.addEventListener("click", () => {
+              // Send the request to acknowledge the donation
+              fetch(`/api/acknowledge_donation/${item.id}`, {
+                  method: "PUT",
+                  headers: { "Content-Type": "application/json" },
+              })
+              .then(res => res.json())
+              .then(data => {
+                  if (data.message === "Acknowledged successfully") {
+                      acknowledgeBtn.remove();
+                      card.querySelector(".donation-status").textContent = "Ongoing";
+                  } else {
+                      alert(data.error || "Failed to acknowledge donation.");
+                  }
+              })
+              .catch(err => alert("Error: " + err));
           });
+      
+          card.appendChild(acknowledgeBtn);
+      }
+      
 
-          // EDIT handler
-          card.querySelector(".edit-btn").addEventListener("click", () => {
-            const editableFields = card.querySelectorAll(".editable");
-            const updatedData = {};
+        // Disable editing/removing if status is beyond initial listing
+        if (status !== "Donation Request Listed") {
+          editBtn.style.display = "none";
+          removeBtn.style.display = "none";
+        }
 
-            editableFields.forEach(span => {
-              const newValue = prompt(`Edit ${span.dataset.field}`, span.textContent);
-              if (newValue !== null) {
-                span.textContent = newValue;
-                updatedData[span.dataset.field] = newValue;
-              }
-            });
+        container.appendChild(card);
 
-            // Send updated data to backend
-            fetch(`http://127.0.0.1:5000/api/edit_request/${item.id}`, {
-              method: "PUT",
-              headers: {
-                "Content-Type": "application/json"
-              },
-              body: JSON.stringify(updatedData)
-            })
-            .then(res => {
-              if (!res.ok) alert("Failed to update");
-            });
+        // REMOVE handler
+        removeBtn.addEventListener("click", () => {
+          fetch(`/api/delete_request/${item.id}`, {
+            method: "DELETE"
+          })
+          .then(res => {
+            if (res.ok) {
+              card.remove(); // Remove from UI
+            } else {
+              alert("Error deleting request");
+            }
           });
         });
-      } else {
-        container.innerHTML = "<p>No requests found.</p>";
-      }
-    })
-    .catch(error => console.error("Error fetching requests:", error));
+
+        // EDIT handler
+        editBtn.addEventListener("click", () => {
+          const editableFields = card.querySelectorAll(".editable");
+          const updatedData = {};
+
+          editableFields.forEach(span => {
+            const newValue = prompt(`Edit ${span.dataset.field}`, span.textContent);
+            if (newValue !== null) {
+              span.textContent = newValue;
+              updatedData[span.dataset.field] = newValue;
+            }
+          });
+
+          fetch(`/api/edit_request/${item.id}`, {
+            method: "PUT",
+            headers: {
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify(updatedData)
+          })
+          .then(res => {
+            if (!res.ok) alert("Failed to update");
+          });
+        });
+      });
+    } else {
+      container.innerHTML = "<p>No requests found.</p>";
+    }
+  })
+  .catch(error => console.error("Error fetching requests or statuses:", error));
 });

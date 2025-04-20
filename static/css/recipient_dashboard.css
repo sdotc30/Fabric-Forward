@@ -1,4 +1,8 @@
 /* General Styles */
+  html, body {
+    overflow-x: hidden;
+  }
+  
 body {
     font-family: Arial, sans-serif;
     margin: 0;
@@ -12,7 +16,7 @@ header {
     color: white;
     padding: 15px;
     text-align: center;
-    width: 100%;
+    width: 100vw;
 }
 
 nav ul {
@@ -63,6 +67,22 @@ nav ul li a {
     box-sizing: border-box;
     resize: none;
 }
+.request-form select {
+    display: block;
+    width: 33%;
+    background-color: white;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    resize: none;
+    display: inline-grid;
+}
+
+.request-form select:required:invalid {
+    color: rgb(101, 101, 101);
+  }
 
 .request-form textarea {
     min-height: 100px;
@@ -155,27 +175,36 @@ nav ul li a {
 
 /* Cards */
 .card-container {
-    padding-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 3.5rem; /* Increase the gap value to add more space */
-    justify-content: center;
-}
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    width: 90%;
+    max-width: 1000px; /* Optional: cap overall width if needed */
+    margin: auto; /* center the container */
+    padding: 10px;
+  }
+  
+  .card {
+    background-color: #fff;
+    border: 2px solid #ddd;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    min-width: 0; /* ensures card doesn't overflow grid */
+  }
 
-.card {
-    background-color: white;
-    border: 1px solid #ffffff;
-    border-radius: 8px;
-    padding: 1rem;
-    width: 300px;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-}
-
-.card h3 {
+  .card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .card h3 {
     margin-top: 0;
-    font-size: 1.2rem;
+    font-size: 1.4em;
     color: #2c3e50;
-}
+  }
+  
+  
 
 .card .price-stock {
     font-weight: bold;
@@ -214,3 +243,42 @@ nav ul li a {
 body {
     padding-bottom: 40px; /* Adjust value as needed */
 }
+
+/* Responsive Layout for Filter Section on Small Screens */
+@media (max-width: 600px) {
+    .filter-section {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .filter-section input,
+    .filter-section button {
+        width: 100%;
+    }
+}
+
+@media (max-width: 600px) {
+    header{
+        box-sizing: border-box;
+    }
+    nav ul li a {
+        font-size: 14px;
+      }
+    
+    .request-form{
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .requests-list{
+        margin-left: 1rem;
+        margin-right: 1rem;
+    }
+    .card-container {
+      grid-template-columns: 1fr; /* 1 card per row on small screens */
+    }
+
+    .request-form select{
+        width: 100%;
+    }
+  }
+  
