@@ -10,6 +10,7 @@ import pymysql
 from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 import logging
+from flask_mail import Mail, Message
 
 # Load environment variables
 load_dotenv()
@@ -55,6 +56,14 @@ db = SQLAlchemy(app)
 login_manager = LoginManager(app)
 login_manager.login_view = 'login'
 
+# Configure Flask-Mail
+app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+app.config['MAIL_PORT'] = 587
+app.config['MAIL_USE_TLS'] = True
+app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")  # Your Gmail email
+app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")  # Your Gmail password or App Password
+mail = Mail(app)
+
 # Logging configuration
 logging.basicConfig(level=logging.DEBUG)
 
@@ -91,6 +100,18 @@ class DonationStatus(db.Model):
     donor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     # Status values: "Acknowledgement Pending", "Donation Accepted", "Donation Ongoing"
     status = db.Column(db.String(50), nullable=False, default="Donation Request Listed") 
+
+class DonorDetails(db.Model):
+    __tablename__ = 'donor_details'
+    id = db.Column(db.Integer, primary_key=True)
+    rid = db.Column(db.Integer, db.ForeignKey('recipient.rid'), nullable=False)
+    donor_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    name = db.Column(db.String(100), nullable=False)
+    email = db.Column(db.String(100), nullable=False)
+    phone = db.Column(db.String(20))
+    quantity_fulfilled = db.Column(db.Integer, nullable=False)
+    notes = db.Column(db.Text)
+    created_at = db.Column(db.TIMESTAMP, server_default=db.func.current_timestamp())
 
 
 # Routes
@@ -370,12 +391,14 @@ def update_status(status_id):
 @login_required
 def delete_status(rid):
     status_entry = DonationStatus.query.filter_by(rid=rid, donor_id=current_user.id).first()
+    donor_status = DonorDetails.query.filter_by(rid=rid,donor_id = current_user.id).first()
 
     if not status_entry:
         return jsonify({"error": "Unauthorized or not found"}), 403
 
     try:
         db.session.delete(status_entry)
+        db.session.delete(donor_status)
         db.session.commit()
         return jsonify({"message": "Donation status canceled"}), 200
     except Exception as e:
@@ -427,6 +450,160 @@ def get_status_by_rid(rid):
         return jsonify({
             "status": "Donation Request Listed"
         }), 200
+    
+@app.route('/api/accept_donation/<int:rid>', methods=["POST"])
+@login_required
+def accept_donation(rid):
+    if current_user.role != "donor":
+        return jsonify({"error": "Only donors can accept donations"}), 403
+
+    data = request.get_json()
+    donor_name = data.get("name")
+    donor_email = data.get("email")
+    donor_phone = data.get("phone")
+    quantity_fulfilled = data.get("quantity")
+    additional_notes = data.get("notes")
+
+    # Validate required fields
+    if not all([donor_name, donor_email, donor_phone, quantity_fulfilled]):
+        return jsonify({"error": "All required fields must be filled"}), 400
+
+    # Check if the request exists
+    request_entry = Recipient.query.get(rid)
+    if not request_entry:
+        return jsonify({"error": "Request not found"}), 404
+
+    # Create or update the donation status
+    status_entry = DonationStatus.query.filter_by(rid=rid, donor_id=current_user.id).first()
+    if not status_entry:
+        status_entry = DonationStatus(
+            rid=rid,
+            donor_id=current_user.id,
+            status="Acknowledgement Pending"
+        )
+        db.session.add(status_entry)
+    else:
+        status_entry.status = "Acknowledgement Pending"
+
+    # Insert donor details into the new table
+    donor_details = DonorDetails(
+        rid=rid,
+        donor_id=current_user.id,
+        name=donor_name,
+        email=donor_email,
+        phone=donor_phone,
+        quantity_fulfilled=quantity_fulfilled,
+        notes=additional_notes
+    )
+    db.session.add(donor_details)
+
+    try:
+        db.session.commit()
+
+        # Send email to the recipient
+        recipient_user = Users.query.get(request_entry.user_id)
+        msg = Message(
+            subject="Your Donation Request Has Been Accepted",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[recipient_user.email]
+        )
+        msg.html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Base styles */
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }}
+        .container {{
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }}
+        h1 {{
+            color: #ff6f61;
+            font-size: 24px;
+        }}
+        p {{
+            margin: 10px 0;
+        }}
+        .details {{
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }}
+        .details p {{
+            margin: 5px 0;
+        }}
+        .footer {{
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ff6f61;
+        }}
+        .button {{
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }}
+
+        /* Responsive design for mobile devices */
+        @media (max-width: 600px) {{
+            .container {{
+                padding: 15px;
+            }}
+            h1 {{
+                font-size: 20px;
+            }}
+            .button {{
+                width: 100%;
+                text-align: center;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Donation Request Has Been Accepted!</h1>
+        <p>Dear {recipient_user.email.split('@')[0]},</p>
+        <p>Your donation request for <strong>{request_entry.cloth_item}</strong> has been accepted by a donor on FabricForward.</p>
+
+        <div class="details">
+            <p><strong>Name of the Donor:</strong> {donor_name}</p>
+            <p><strong>Email Address of the Donor:</strong> {donor_email}</p>
+            <p><strong>Contact Information of the Donor:</strong> {donor_phone}</p>
+            <p><strong>Quantity They Will Fulfill:</strong> {quantity_fulfilled}</p>
+            <p><strong>A Note by the Donor:</strong> {additional_notes or 'None'}</p>
+        </div>
+
+        <p>Please login to your dashboard at <a href="https://fabric-forward.onrender.com">FabricForward</a> to acknowledge the donor's request and proceed further.</p>
+
+        <div class="footer">
+            <p>Best Regards,<br>Team FabricForward</p>
+        </div>
+    </div>
+</body>
+</html>
+"""
+        mail.send(msg)
+
+        return jsonify({"message": "Donation accepted successfully"}), 200
+    except Exception as e:
+        db.session.rollback()
+        logging.error(f"Error accepting donation: {str(e)}")
+        return jsonify({"error": "Database error"}), 500
 
 
 

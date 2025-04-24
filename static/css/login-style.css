@@ -296,3 +296,52 @@ body {
         padding: 0 10px;
     }
 }
+
+
+.btnhome {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    width: 40px;
+    height: 40px;
+    background-color: #ff6f61;
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    overflow: hidden;
+    transition: width 0.3s ease, border-radius 0.3s ease;
+    padding: 0;
+}
+
+.btnhome .icon {
+    font-size: 18px;
+    transition: opacity 0.2s ease;
+}
+
+.btnhome .text {
+    position: absolute;
+    opacity: 0;
+    white-space: nowrap;
+    font-weight: bold;
+    transition: opacity 0.3s ease;
+    /* Center the text */
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+/* On hover: expand and show text */
+.btnhome:hover {
+    width: 150px;
+    border-radius: 25px;
+}
+
+.btnhome:hover .icon {
+    opacity: 0;
+}
+
+.btnhome:hover .text {
+    opacity: 1;
+}

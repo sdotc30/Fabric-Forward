@@ -1,6 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   fetchRequests();
-  fetchMyDonations();
 });
 
 function fetchRequests() {
@@ -14,16 +13,6 @@ function fetchRequests() {
     });
 }
 
-function fetchMyDonations() {
-  fetch("/api/my_donations")
-    .then((response) => response.json())
-    .then((data) => {
-      renderMyDonations(data);
-    })
-    .catch((error) => {
-      console.error("Error fetching donor's donations:", error);
-    });
-}
 
 function renderRequests(requests) {
   const requestList = document.getElementById("requests");
@@ -72,156 +61,75 @@ function renderRequests(requests) {
 
     // Fetch the status before adding buttons
     fetch(`/api/status/${requestId}`)
-      .then((response) => response.json())
-      .then((statusData) => {
-        // Get the status or default to "Donation Request Listed"
-        const status = statusData.status || "Donation Request Listed";
-        
-        console.log(`Request ID: ${requestId}, Status: ${status}`); // Debug logging
-        
-        statusElement.innerHTML = `<strong>Status:</strong> ${status}`;
-
-        if (status === "Acknowledgement Pending" || status === "Donation Ongoing" || status === "Donation Accepted") {
-          const cancelBtn = document.createElement("button");
-          cancelBtn.textContent = "Cancel Donation";
-          cancelBtn.classList.add("accept-btn");
-
-          cancelBtn.addEventListener("click", () => {
-            fetch(`/api/status/delete/${requestId}`, {
-              method: "DELETE",
-            })
-              .then((response) => {
-                if (response.ok) {
-                  card.remove();
-                  alert("Donation canceled successfully!");
-                } else {
-                  alert("Failed to cancel donation.");
-                }
-              })
-              .catch((error) => {
-                console.error("Error canceling donation:", error);
-                alert("An error occurred. Please try again.");
-              });
-          });
-
-          card.appendChild(cancelBtn);
-        } else if (status === "Donation Request Listed") {
-          const acceptBtn = document.createElement("button");
-          acceptBtn.textContent = "Accept Donation Request";
-          acceptBtn.classList.add("accept-btn");
-
-          acceptBtn.addEventListener("click", () => {
-            fetch("/api/status/create", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-              },
-              body: JSON.stringify({ rid: requestId }),
-            })
-              .then((response) => {
-                if (response.ok) {
-                  statusElement.innerHTML = `<strong>Status:</strong> Acknowledgement Pending`;
-                  acceptBtn.remove();
-                  
-                  if(status == 'Donation Ongoing'){
-                    const cancelBtn = document.createElement("button");
-                  cancelBtn.textContent = "Cancel Donation";
-                  cancelBtn.classList.add("cancel-btn");
-                  cancelBtn.addEventListener("click", () => {
-                    fetch(`/api/status/delete/${requestId}`, {
-                      method: "DELETE",
-                    })
-                      .then((response) => {
-                        if (response.ok) {
-                          card.remove();
-                          alert("Donation canceled successfully!");
-                        } else {
-                          alert("Failed to cancel donation.");
-                        }
-                      })
-                      .catch((error) => {
-                        console.error("Error canceling donation:", error);
-                        alert("An error occurred. Please try again.");
-                      });
-                  });
-                  
-                  card.appendChild(cancelBtn);
-                  }
-                  
-                  
-                  
-                } else {
-                  response.json().then((data) => {
-                    alert(`Failed to accept donation: ${data.error}`);
-                  });
-                }
-              });
-          });
-
-          card.appendChild(acceptBtn);
-        }
-        
-        // Append the card to the DOM now that we have the status
-        requestList.appendChild(card);
-        
-        // Keep track of processed requests and log when all are done
-        requestsProcessed++;
-        if (requestsProcessed === totalRequests) {
-          console.log("All requests processed and rendered");
-        }
-      })
-      .catch((error) => {
-        console.error(`Error fetching status for request ${requestId}:`, error);
-        statusElement.innerHTML = `<strong>Status:</strong> Error fetching status`;
-        requestList.appendChild(card);
-        
-        // Count this as processed even if there was an error
-        requestsProcessed++;
-      });
-  });
-}
-
-function renderMyDonations(donations) {
-  const donationList = document.getElementById("my-donations");
-  if (!donationList) {
-    console.warn("my-donations element not found in the DOM");
-    return;
-  }
+    .then((response) => response.json())
+    .then((statusData) => {
+      // Define the status first
+      const status = statusData.status || "Donation Request Listed";
+      
+      // Determine the class based on the status
+      let statusClass = "";
+      if (status === "Donation Request Listed") {
+        statusClass = "blue-status";
+      } else if (status === "Acknowledgement Pending") {
+        statusClass = "yellow-status";
+      } else if (status === "Donation Accepted") {
+        statusClass = "green-status";
+      } else if (status === "Donation Ongoing") {
+        statusClass = "purple-status";
+      } else {
+        statusClass = "gray-status";
+      }
   
-  donationList.innerHTML = "";
-
-  if (donations.length === 0) {
-    donationList.innerHTML = "<p>You haven't accepted any donations yet.</p>";
-    return;
+      // Set the status text with the correct class applied to the status
+      statusElement.innerHTML = `<strong>Status:</strong> <span class="${statusClass}">${status}</span>`;
+  
+  
+          if (status === "Donation Request Listed") {
+            const acceptBtn = document.createElement("button");
+            acceptBtn.textContent = "Accept Donation Request";
+            acceptBtn.classList.add("accept-btn");
+  
+            acceptBtn.addEventListener("click", () => {
+              openDonorDetailsForm(requestId, req.food_item, req.quantity);
+            });
+  
+            card.appendChild(acceptBtn);
+          } else if (status === "Acknowledgement Pending" || status === "Donation Ongoing" || status === "Donation Accepted") {
+            const cancelBtn = document.createElement("button");
+            cancelBtn.textContent = "Cancel Donation";
+            cancelBtn.classList.add("accept-btn");
+  
+            cancelBtn.addEventListener("click", () => {
+              fetch(`/api/status/delete/${requestId}`, {
+                method: "DELETE",
+              })
+                .then((response) => {
+                  if (response.ok) {
+                    card.remove();
+                    alert("Donation canceled successfully!");
+                  } else {
+                    alert("Failed to cancel donation.");
+                  }
+                })
+                .catch((error) => {
+                  console.error("Error canceling donation:", error);
+                  alert("An error occurred. Please try again.");
+                });
+            });
+  
+            card.appendChild(cancelBtn);
+          }
+  
+          requestList.appendChild(card);
+        })
+        .catch((error) => {
+          console.error(`Error fetching status for request ${requestId}:`, error);
+          statusElement.innerHTML = `<strong>Status:</strong> Error fetching status`;
+          requestList.appendChild(card);
+        });
+    });
   }
 
-  donations.forEach((donation) => {
-    const card = document.createElement("div");
-    card.classList.add("donation-card");
-
-    card.innerHTML = `
-      <h3>${donation.cloth_item.toUpperCase()}</h3>
-      <p><strong>Quantity:</strong> ${donation.quantity}</p>
-      <p><strong>Gender:</strong> ${donation.gender}</p>
-      <p><strong>Age Group:</strong> ${donation.age_group}</p>
-      <p><strong>Size:</strong> ${donation.size}</p>
-      <p><strong>Description:</strong> ${donation.desc || "No description provided."}</p>
-      <p><strong>Location:</strong> ${donation.location}</p>
-      <p><strong>Status:</strong> ${donation.status}</p>
-    `;
-
-     if (donation.status === "Donation Ongoing") {
-      const completeBtn = document.createElement("button");
-      completeBtn.textContent = "Mark as Completed";
-      completeBtn.addEventListener("click", () => {
-        updateStatus(donation.rid, "Donation Completed", card);
-      });
-      card.appendChild(completeBtn);
-    }
-
-    donationList.appendChild(card);
-  });
-}
 
 function updateStatus(donationId, newStatus, card) {
   fetch(`/api/update_status/${donationId}`, {
@@ -243,6 +151,79 @@ function updateStatus(donationId, newStatus, card) {
       console.error("Error updating status:", error);
       alert("An error occurred while updating status.");
     });
+}
+
+function openDonorDetailsForm(requestId, clothItem, quantity) {
+  const modal = document.createElement("div");
+  modal.classList.add("modal");
+
+  modal.innerHTML = `
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <h2>Provide Donor Details for ${clothItem}</h2>
+      <form id="donor-details-form">
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
+        
+        <label for="quantity">Quantity to Fulfill (Max: ${quantity}):</label>
+        <input type="number" id="quantity" name="quantity" min="1" max="${quantity}" required>
+        
+        <label for="notes">Additional Notes:</label>
+        <textarea id="notes" name="notes"></textarea>
+        
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+  `;
+
+  document.body.appendChild(modal);
+
+  const closeBtn = modal.querySelector(".close");
+  closeBtn.addEventListener("click", () => {
+    modal.remove();
+  });
+
+  const form = modal.querySelector("#donor-details-form");
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    const formData = {
+      name: form.querySelector("#name").value,
+      email: form.querySelector("#email").value,
+      phone: form.querySelector("#phone").value,
+      quantity: parseInt(form.querySelector("#quantity").value),
+      notes: form.querySelector("#notes").value,
+    };
+
+    fetch(`/api/accept_donation/${requestId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          modal.remove();
+          alert("Donation accepted successfully!");
+          fetchRequests(); // Refresh the list
+        } else {
+          response.json().then((data) => {
+            alert(`Failed to accept donation: ${data.error}`);
+          });
+        }
+      })
+      .catch((error) => {
+        console.error("Error accepting donation:", error);
+        alert("An error occurred. Please try again.");
+      });
+  });
 }
 
 function applyFilter() {
