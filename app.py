@@ -220,15 +220,14 @@ def edit_request(request_id):
 def get_all_requests():
     if current_user.role != 'donor':
         return jsonify({"error": "Unauthorized access"}), 403
-    
-
+   
     location_query = request.args.get('location')
     gender_query = request.args.get('gender')
     age_group_query = request.args.get('age_group')
     size_query = request.args.get('size')
-
+    
+    # Get all requests that match the filters with quantity > 0
     query = Recipient.query
-
     if location_query:
         query = query.filter(Recipient.location.ilike(f"%{location_query}%"))
     if gender_query:
@@ -237,29 +236,54 @@ def get_all_requests():
         query = query.filter(Recipient.age_group.ilike(f"%{age_group_query}%"))
     if size_query:
         query = query.filter(Recipient.size.ilike(f"%{size_query}%"))
-
-
+    
     query = query.filter(Recipient.quantity > 0)
+    
+    # Get all filtered requests
     all_requests = query.all()
+    
+    # Get ALL status entries (not just for filtered requests)
+    # This is crucial because we need to know ALL requests that have been claimed
+    all_status_entries = DonationStatus.query.all()
+    
+    # Create a dict to track which requests are claimed and by whom
+    # Key is request ID, value is donor ID
+    claimed_requests = {}
+    for entry in all_status_entries:
+        if entry.status in ['Acknowledgement Pending', 'Donation Ongoing']:
+            claimed_requests[entry.rid] = entry.donor_id
+    
     data = []
     for req in all_requests:
-        status_entry = DonationStatus.query.filter_by(rid=req.rid).first()
-
-        if status_entry:
-            if status_entry.status in ['Acknowledgment Pending', 'Donation Ongoing']:
-                if status_entry.donor_id != current_user.id:
-                    continue
-        data.append({
-            "id": req.rid,
-            "cloth_item": req.cloth_item,
-            "quantity": req.quantity,
-            "location": req.location,
-            "gender": req.gender,
-            "age_group": req.age_group,
-            "size": req.size,
-            "desc": req.description
-        })
+        # Check if this request is claimed
+        if req.rid in claimed_requests:
+            # If claimed by current user, add it
+            if claimed_requests[req.rid] == current_user.id:
+                data.append({
+                    "id": req.rid,
+                    "cloth_item": req.cloth_item,
+                    "quantity": req.quantity,
+                    "location": req.location,
+                    "gender": req.gender,
+                    "age_group": req.age_group,
+                    "size": req.size,
+                    "desc": req.description
+                })
+        else:
+            # Not claimed by anyone, add it
+            data.append({
+                "id": req.rid,
+                "cloth_item": req.cloth_item,
+                "quantity": req.quantity,
+                "location": req.location,
+                "gender": req.gender,
+                "age_group": req.age_group,
+                "size": req.size,
+                "desc": req.description
+            })
+    
     return jsonify(data)
+
 
 @app.route('/profile')
 @login_required
