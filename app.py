@@ -198,19 +198,17 @@ def delete_request(request_id):
     return jsonify({"error": "Unauthorized"}), 403
 
 
-@app.route("/api/edit_request/<int:request_id>", methods=["PUT"])
+@app.route("/api/edit_request/<int:request_id>", methods=["PATCH"])
 @login_required
 def edit_request(request_id):
     req = Recipient.query.get(request_id)
     if req and req.user_id == current_user.id:
         data = request.get_json()
-        req.cloth_item = data.get("cloth_item", req.cloth_item)
         req.quantity = data.get("quantity", req.quantity)
         req.location = data.get("location", req.location)
         req.gender = data.get("gender", req.gender)
         req.age_group = data.get("age_group", req.age_group)
         req.size = data.get("size", req.size)
-        req.desc = data.get("desc", req.desc)
         db.session.commit()
         return jsonify({"message": "Updated"}), 200
     return jsonify({"error": "Unauthorized"}), 403

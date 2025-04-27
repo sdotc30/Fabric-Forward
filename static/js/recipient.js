@@ -27,7 +27,7 @@ document.addEventListener("DOMContentLoaded", () => {
           <p><strong>Gender:</strong> <span class="editable" data-field="gender">${item.gender}</span></p>
           <p><strong>Age Group:</strong> <span class="editable" data-field="age_group">${item.age_group}</span></p>
           <p><strong>Required Cloth Size:</strong> <span class="editable" data-field="size">${item.size}</span></p>
-          <p><strong>Description:</strong> <span class="editable" data-field="desc">${item.desc || "No description provided."}</span></p>
+          <p><strong>Description:</strong> <span data-field="desc">${item.desc || "No description provided."}</span></p>
           <p><strong>Status:</strong> <span class="donation-status">${status}</span></p>
         `;
 
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", () => {
           });
 
           fetch(`/api/edit_request/${item.id}`, {
-            method: "PUT",
+            method: "PATCH",
             headers: {
               "Content-Type": "application/json"
             },
