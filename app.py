@@ -170,7 +170,7 @@ def get_my_requests():
     if current_user.role != 'recipient':
         return jsonify({"error": "Unauthorized access"}), 403
 
-    user_requests = Recipient.query.filter_by(user_id=current_user.id).all()
+    user_requests = Recipient.query.filter_by(user_id=current_user.id).filter(Recipient.quantity > 0).all()
     
     data = []
     for req in user_requests:
@@ -238,9 +238,17 @@ def get_all_requests():
     if size_query:
         query = query.filter(Recipient.size.ilike(f"%{size_query}%"))
 
+
+    query = query.filter(Recipient.quantity > 0)
     all_requests = query.all()
     data = []
     for req in all_requests:
+        status_entry = DonationStatus.query.filter_by(rid=req.rid).first()
+
+        if status_entry:
+            if status_entry.status in ['Acknowledgment Pending', 'Donation Ongoing']:
+                if status_entry.donor_id != current_user.id:
+                    continue
         data.append({
             "id": req.rid,
             "cloth_item": req.cloth_item,
@@ -429,6 +437,96 @@ def acknowledge_donation(rid):
     status_entry.status = "Donation Ongoing"
     try:
         db.session.commit()
+        recipient_user = DonorDetails.query.filter_by(rid=rid).first()
+        msg = Message(
+            subject="Your Donation has been Acknowledged",
+            sender=app.config['MAIL_USERNAME'],
+            recipients=[recipient_user.email]
+        )
+        msg.html = f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Base styles */
+        body {{
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }}
+        .container {{
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }}
+        h1 {{
+            color: #ff6f61;
+            font-size: 24px;
+        }}
+        p {{
+            margin: 10px 0;
+        }}
+        .details {{
+            background-color: #fff;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #eee;
+        }}
+        .details p {{
+            margin: 5px 0;
+        }}
+        .footer {{
+            margin-top: 20px;
+            font-size: 14px;
+            color: #ff6f61;
+        }}
+        .button {{
+            display: inline-block;
+            margin-top: 20px;
+            padding: 10px 20px;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }}
+
+        /* Responsive design for mobile devices */
+        @media (max-width: 600px) {{
+            .container {{
+                padding: 15px;
+            }}
+            h1 {{
+                font-size: 20px;
+            }}
+            .button {{
+                width: 100%;
+                text-align: center;
+            }}
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Your Donation Has Been Acknowledged!</h1>
+        <p>Dear {recipient_user.email.split('@')[0]},</p>
+        <p>We are pleased to inform you that your generous contribution of <strong>{request_entry.cloth_item}</strong> has been officially acknowledged by the recipient through FabricForward. Your support plays a vital role in making a positive impact, and we are grateful for your compassionate gesture. You may continue to monitor the status of your donation through your dashboard. Thank you for embodying the spirit of giving and being an integral part of our mission.</p>
+        <br>
+        <br>
+        <p>Please login to your dashboard at <a href="https://fabric-forward.onrender.com">FabricForward</a> to proceed further.</p>
+
+        <div class="footer">
+            <p>Best Regards,<br>Team FabricForward</p>
+        </div>
+    </div>
+</body>
+</html>
+"""
+        mail.send(msg)
         return jsonify({"message": "Acknowledged successfully"}), 200
     except Exception as e:
         db.session.rollback()
@@ -604,6 +702,28 @@ def accept_donation(rid):
         db.session.rollback()
         logging.error(f"Error accepting donation: {str(e)}")
         return jsonify({"error": "Database error"}), 500
+    
+@app.route('/api/markcomplete/<int:rid>', methods = ['PATCH'])
+@login_required
+def markcomplete(rid):
+    if current_user.role != "recipient":
+        return jsonify({"error": "Only recipients can mark donations as completed."}), 403
+    updatedqty = DonorDetails.query.filter_by(rid=rid).first()
+    req_list = Recipient.query.filter_by(rid=rid).first()
+    status = DonationStatus.query.filter_by(rid=rid).first()
+
+    qty = req_list.quantity
+    qtyfulfill = updatedqty.quantity_fulfilled
+    new_qty = qty - qtyfulfill
+
+    if new_qty == 0:
+        req_list.quantity = 0
+    else:
+        req_list.quantity = new_qty
+    
+    db.session.delete(status)
+    db.session.commit()
+    return jsonify({"success": True}), 200
 
 
 

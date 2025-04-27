@@ -421,3 +421,36 @@ footer {
     }
   }
   
+
+/* Scroll Animation Styles */
+.scroll-element {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+  }
+  
+  .scroll-element.animated {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Optional: Add some specific timing for different elements */
+  .why-choose-us h2.animated {
+    transition-duration: 0.6s;
+  }
+  
+  .feature.animated {
+    transition-duration: 0.7s;
+  }
+  
+  .current h2.animated {
+    transition-duration: 0.6s;
+  }
+  
+  .explanation p.animated {
+    transition-duration: 0.8s;
+  }
+  
+  .explanation img.animated {
+    transition-duration: 0.9s;
+  }

@@ -90,7 +90,7 @@ function renderRequests(requests) {
             acceptBtn.classList.add("accept-btn");
   
             acceptBtn.addEventListener("click", () => {
-              openDonorDetailsForm(requestId, req.food_item, req.quantity);
+              openDonorDetailsForm(requestId, req.cloth_item, req.quantity);
             });
   
             card.appendChild(acceptBtn);
