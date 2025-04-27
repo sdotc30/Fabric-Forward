@@ -541,7 +541,7 @@ def acknowledge_donation(rid):
         <p>We are pleased to inform you that your generous contribution of <strong>{request_entry.cloth_item}</strong> has been officially acknowledged by the recipient through FabricForward. Your support plays a vital role in making a positive impact, and we are grateful for your compassionate gesture. You may continue to monitor the status of your donation through your dashboard. Thank you for embodying the spirit of giving and being an integral part of our mission.</p>
         <br>
         <br>
-        <p>Please login to your dashboard at <a href="https://fabric-forward.onrender.com">FabricForward</a> to proceed further.</p>
+        <p>Please login to your dashboard at <a href="https://fabricforward.onrender.com">FabricForward</a> to proceed further.</p>
 
         <div class="footer">
             <p>Best Regards,<br>Team FabricForward</p>
@@ -710,7 +710,7 @@ def accept_donation(rid):
             <p><strong>A Note by the Donor:</strong> {additional_notes or 'None'}</p>
         </div>
 
-        <p>Please login to your dashboard at <a href="https://fabric-forward.onrender.com">FabricForward</a> to acknowledge the donor's request and proceed further.</p>
+        <p>Please login to your dashboard at <a href="https://fabricforward.onrender.com">FabricForward</a> to acknowledge the donor's request and proceed further.</p>
 
         <div class="footer">
             <p>Best Regards,<br>Team FabricForward</p>
